@@ -1,16 +1,31 @@
 <?php
 
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: PUT, GET, POST, DELETE, OPTIONS, PATCH');
 require 'vendor/autoload.php';
+require 'rest/dao/UserDao.class.php';
 
-Flight::register('db', 'PDO', array('mysql:host=localhost;dbname=carservice','root',''));
+Flight::register('userDao', 'UserDao');
 
-Flight::route('GET /staging/users', function(){
-   $users = Flight::db()->query('SELECT * FROM Users', PDO::FETCH_ASSOC)->fetchAll();
-   var_dump($users);
-   Flight::json($users);
-   });
+Flight::route('GET /staging/users', function() {
+   Flight::json(Flight::userDao()->getUsers());
+});
+
+Flight::route('GET /staging/users/@id', function($id) {
+   Flight::json(Flight::userDao()->getUserById($id));
+});
+
+Flight::route('POST /staging/users', function(){
+    $data = Flight::request()->data->getData();
+    Flight::json(Flight::userDao()->addUser($data));
+});
+
+Flight::route('PUT /staging/users/@id', function($id) {
+   $data = Flight::request()->data->getData();
+   Flight::userDao()->updateUser($id, $data);
+});
+
+Flight::route('DELETE /staging/users/@id', function($id) {
+   Flight::json(Flight::userDao()->deleteUser($id));
+});
 
 Flight::start();
 
