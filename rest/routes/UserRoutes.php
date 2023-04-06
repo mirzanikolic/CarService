@@ -1,7 +1,5 @@
 <?php
 
-Flight::register('userDao', 'UserDao');
-
 Flight::route('GET /staging/users', function() {
    Flight::json(Flight::userDao()->getUsers());
 });
