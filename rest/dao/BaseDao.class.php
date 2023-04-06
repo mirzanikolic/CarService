@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '../Config.php';
+require_once __DIR__ . '../config.php';
 
 class BaseDao {
 
@@ -15,7 +15,6 @@ class BaseDao {
         $port = Config::$port;
         $this->table_name = $table_name;
         $this->conn = new PDO("mysql:host=$host;port=$port;dbname=$db", $username, $password);
-
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
