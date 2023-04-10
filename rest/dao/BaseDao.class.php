@@ -1,22 +1,24 @@
 <?php
 
-require_once __DIR__ . '../config.php';
+require_once __DIR__ . '/../config/Config.php';
 
 class BaseDao {
 
-    protected $conn;
-    protected $table_name;
+    private $conn;
+    private $table_name;
 
     public function __construct($table_name) {
+        $this->table_name = $table_name;
         $host = Config::$host;
         $username = Config::$username;
         $password = Config::$password;
-        $db = Config::$database;
+        $schema = Config::$database;
         $port = Config::$port;
-        $this->table_name = $table_name;
-        $this->conn = new PDO("mysql:host=$host;port=$port;dbname=$db", $username, $password);
+        $this->conn = new PDO("mysql:host=$host;port=$port;dbname=$schema", $username, $password);
+        // set the PDO error mode to exception
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
+
 
     public function getAll() {
         $stmt = $this->conn->prepare("SELECT * FROM " . $this->table_name);
@@ -25,7 +27,7 @@ class BaseDao {
     }
 
     public function getById($id) {
-        $stmt = $this->conn->prepare("SELECT * FROM" . $this->table_name . "WHERE id = :id");
+        $stmt = $this->conn->prepare("SELECT * FROM " . $this->table_name . " WHERE id = :id");
         $stmt->execute(["id" => $id]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return reset($result);

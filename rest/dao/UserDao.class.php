@@ -4,7 +4,7 @@ require_once __DIR__ . '/BaseDao.class.php';
 
 class UserDao extends BaseDao {
 
-    private static $table_name = "Users";
+    protected $table_name = "Users";
 
     public function __construct() {
 
