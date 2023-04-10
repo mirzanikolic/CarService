@@ -25,6 +25,7 @@ Flight::route('PUT /staging/users/@id', function ($id) {
 
 Flight::route('DELETE /staging/users/@id', function ($id) {
     Flight::userService()->delete($id);
+    Flight::json(["message" => "User successfully deleted"]);
 });
 
 ?>
