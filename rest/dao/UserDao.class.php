@@ -4,7 +4,7 @@ require_once __DIR__ . '/BaseDao.class.php';
 
 class UserDao extends BaseDao {
 
-    protected $table_name = "Users";
+    protected $table_name = "users";
 
     public function __construct() {
 
@@ -12,7 +12,7 @@ class UserDao extends BaseDao {
     }
 
     public function getUserByFirstName($first_name) {
-        return $this->query_unique("SELECT * FROM " . $this->table_name . "WHERE first_name = :first_name",
+        return $this->query_unique("SELECT * FROM " . $this->table_name . " WHERE first_name = :first_name",
         ["first_name" => $first_name]);
     }
 }
