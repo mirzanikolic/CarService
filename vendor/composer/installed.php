@@ -1,32 +1,33 @@
-<?php return array(
-    'root' => array(
-        'name' => '__root__',
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'reference' => 'b678d4439cfe2d015ff23a1b016e787f51f9a72a',
-        'type' => 'library',
-        'install_path' => __DIR__ . '/../../',
-        'aliases' => array(),
-        'dev' => true,
+<?php return array (
+  'root' => 
+  array (
+    'pretty_version' => 'dev-main',
+    'version' => 'dev-main',
+    'aliases' => 
+    array (
     ),
-    'versions' => array(
-        '__root__' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => 'b678d4439cfe2d015ff23a1b016e787f51f9a72a',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../../',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
-        'mikecao/flight' => array(
-            'pretty_version' => 'v2.0.1',
-            'version' => '2.0.1.0',
-            'reference' => 'a130231646e6c7a9e2504a9025f851e9a3bf1975',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../mikecao/flight',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
+    'reference' => '9df668d2f5b9f6429e58f03d63fb3924436ac206',
+    'name' => '__root__',
+  ),
+  'versions' => 
+  array (
+    '__root__' => 
+    array (
+      'pretty_version' => 'dev-main',
+      'version' => 'dev-main',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '9df668d2f5b9f6429e58f03d63fb3924436ac206',
     ),
+    'mikecao/flight' => 
+    array (
+      'pretty_version' => 'v2.0.1',
+      'version' => '2.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'a130231646e6c7a9e2504a9025f851e9a3bf1975',
+    ),
+  ),
 );
