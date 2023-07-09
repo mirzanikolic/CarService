@@ -34,6 +34,29 @@ Flight::route('DELETE /staging/users/@id', function ($id) {
     Flight::json(["message" => "User successfully deleted"]);
 });
 
+ /**
+* @OA\Post(
+*     path="/login", 
+*     description="Login",
+*     tags={"login"},
+*     @OA\RequestBody(description="Login", required=true,
+*       @OA\MediaType(mediaType="application/json",
+*    			@OA\Schema(
+*             @OA\Property(property="email", type="string", example="demo@gmail.com",	description="Student email" ),
+*             @OA\Property(property="password", type="string", example="12345",	description="Password" ),
+*        )
+*     )),
+*     @OA\Response(
+*         response=200,
+*         description="Logged in successfuly"
+*     ),
+*     @OA\Response(
+*         response=500,
+*         description="Error"
+*     )
+* )
+*/
+
 Flight::route('POST /staging/login', function() {
     $data = Flight::request()->data->getData();
     $user = Flight::userService()->getUserByEmail($data["email"]);

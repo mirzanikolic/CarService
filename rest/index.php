@@ -10,6 +10,13 @@ require_once __DIR__.'/services/UserService.php';
 require_once __DIR__.'/dao/CarDao.class.php';
 require_once __DIR__.'/services/CarService.php';
 
+/* REST API documentation endpoint */
+Flight::route('GET /docs.json', function(){
+    $openapi = \OpenApi\scan('routes');
+    header('Content-Type: application/json');
+    echo $openapi->toJson();
+  });
+
 Flight::register('userDao', 'UserDao');
 Flight::register('userService', 'UserService');
 

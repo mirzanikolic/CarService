@@ -2,6 +2,7 @@
     "require": {
         "mikecao/flight": "^2.0",
         "firebase/php-jwt": "^6.8",
-        "paragonie/sodium_compat": "^1.20"
+        "paragonie/sodium_compat": "^1.20",
+        "zircote/swagger-php": "^3.0"
     }
 }
