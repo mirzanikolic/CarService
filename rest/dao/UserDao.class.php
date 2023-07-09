@@ -15,6 +15,11 @@ class UserDao extends BaseDao {
         return $this->query_unique("SELECT * FROM " . $this->table_name . " WHERE first_name = :first_name",
         ["first_name" => $first_name]);
     }
+
+    public function getUserByEmail($email) {
+        return $this->query_unique("SELECT * FROM " . $this->table_name . " WHERE email = :email",
+        ["email" => $email]);
+    }
 }
 
 ?>
