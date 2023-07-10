@@ -9,6 +9,8 @@ require_once __DIR__.'/dao/UserDao.class.php';
 require_once __DIR__.'/services/UserService.php';
 require_once __DIR__.'/dao/CarDao.class.php';
 require_once __DIR__.'/services/CarService.php';
+require_once __DIR__.'/dao/ServicerDao.class.php';
+require_once __DIR__.'/services/ServicerService.php';
 
 Flight::register('userDao', 'UserDao');
 Flight::register('userService', 'UserService');
@@ -16,8 +18,12 @@ Flight::register('userService', 'UserService');
 Flight::register('carDao', 'CarDao');
 Flight::register('carService', 'CarService');
 
+Flight::register('servicerDao', 'ServicerDao');
+Flight::register('servicerService', 'ServicerService');
+
 require_once __DIR__ . '/routes/UserRoutes.php';
 require_once __DIR__ . '/routes/CarRoutes.php';
+require_once __DIR__ . '/routes/ServicerRoutes.php';
 
 Flight::start();
 ?>
