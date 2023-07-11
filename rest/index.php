@@ -31,8 +31,7 @@ Flight::route('/*', function(){
     //return TRUE;
     //perform JWT decode
     $path = Flight::request()->url;
-    if ($path == '/staging/login' || $path == '/docs.json' || '/staging/servicers' || '/staging/users') return TRUE; // exclude login route from middleware
-  
+    if ($path == '/staging/login' || $path == '/docs.json' || $path == '/staging/servicers' || $path == '/staging/users') return TRUE; // exclude login route from middleware 
     $headers = getallheaders();
     if (@!$headers['Authorization']){
       Flight::json(["message" => "Authorization is missing"], 403);
