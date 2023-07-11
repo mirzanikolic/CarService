@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,7 +6,10 @@
   <!-- Include Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+
   <style>
     /* CSS for the profile icon */
     .profile-icon {
@@ -68,8 +72,126 @@
 
   <div class="container text-center mt-4">
     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCarModal">Add Car</button>
-  </div>
 
+    <div class="card-body">
+        <table id="myTable" class="table table-border table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Model</th>
+              <th>Year</th>
+              <th>Type</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+      </div>
+      
+      <script>
+      $(document).ready(function() {
+        // Load initial data
+        loadData();
+      
+        // Add button click event
+        $('#addButton').click(function() {
+          var name = $('#nameInput').val();
+          var model = $('#modelInput').val();
+          var year = $('#yearInput').val();
+          var type = $('#typeInput').val();
+      
+          $.ajax({
+            type: 'POST',
+            url: '/staging/cars',
+            data: { name: name, model: model, year: year, type: type },
+            success: function(response) {
+              // Reload table data
+              loadData();
+            }
+          });
+        });
+      
+        // Edit button click event
+        $('#myTable').on('click', '.editCarBtn', function() {
+          var carId = $(this).val();
+      
+          $.ajax({
+            type: 'GET',
+            url: '/staging/cars/' + carId,
+            success: function(response) {
+              // Handle the response to populate the edit modal or perform any other action
+            }
+          });
+        });
+      
+        // Update button click event
+        $('#updateButton').click(function() {
+          var carId = $('#editCarId').val();
+          var newName = $('#editCarName').val();
+          var newModel = $('#editCarModel').val();
+          var newYear = $('#editCarYear').val();
+          var newType = $('#editCarType').val();
+      
+          $.ajax({
+            type: 'PUT',
+            url: '/staging/cars/' + carId,
+            data: { name: newName, model: newModel, year: newYear, type: newType },
+            success: function(response) {
+              // Reload table data
+              loadData();
+            }
+          });
+        });
+      
+        // Delete button click event
+        $('#myTable').on('click', '.deleteCarBtn', function() {
+          var carId = $(this).val();
+      
+          $.ajax({
+            type: 'DELETE',
+            url: '/staging/cars/' + carId,
+            success: function(response) {
+              // Reload table data
+              loadData();
+            }
+          });
+        });
+      
+        function loadData() {
+          $.ajax({
+            type: 'GET',
+            url: '/staging/cars',
+            success: function(response) {
+              var tableBody = $('#myTable tbody');
+              tableBody.empty();
+      
+              $.each(response, function(index, car) {
+                var row = '<tr>';
+                row += '<td>' + car.id + '</td>';
+                row += '<td>' + car.name + '</td>';
+                row += '<td>' + car.model + '</td>';
+                row += '<td>' + car.year + '</td>';
+                row += '<td>' + car.type + '</td>';
+                row += '<td>';
+                row += '<button type="button" value="' + car.id + '" class="viewCarBtn btn btn-info">View</button>';
+                row += '<button type="button" value="' + car.id + '" class="editCarBtn btn btn-success">Edit</button>';
+                row += '<button type="button" value="' + car.id + '" class="deleteCarBtn btn btn-danger">Delete</button>';
+                row += '</td>';
+                row += '</tr>';
+                tableBody.append(row);
+              });
+            }
+          });
+        }
+      });
+      </script>
+      
+    
+
+  <!-- Add Car -->
   <div class="modal fade" id="addCarModal" tabindex="-1" aria-labelledby="addCarModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -77,33 +199,126 @@
           <h5 class="modal-title" id="addCarModalLabel">Add Car</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+
+    <form id="saveCar">
         <div class="modal-body">
+
+            <div id="errorMessage" class="alert-warning d-none"></div>
+
           <div class="mb-3">
             <label for="car-name" class="form-label">Car Name:</label>
-            <input type="text" id="car-name" class="form-control" required>
+            <input type="text" name="name" class="form-control" required>
           </div>
           <div class="mb-3">
             <label for="car-model" class="form-label">Car Model:</label>
-            <input type="text" id="car-model" class="form-control" required>
+            <input type="text" name="model" class="form-control" required>
           </div>
           <div class="mb-3">
             <label for="car-year" class="form-label">Car Year:</label>
-            <input type="text" id="car-year" class="form-control" required>
+            <input type="text" name="year" class="form-control" required>
           </div>
           <div class="mb-3">
             <label for="motor-type" class="form-label">Motor Type:</label>
-            <input type="text" id="motor-type" class="form-control" required>
+            <input type="text" name="type" class="form-control" required>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary" onclick="saveCar()">Save</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save</button>
         </div>
+    </form>
       </div>
     </div>
   </div>
 
+  <!-- Edit Car Modal-->
+  <div class="modal fade" id="carEditModal" tabindex="-1" aria-labelledby="carEditModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="carEditModal">Edit Car</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+    <form id="updateCar">
+        <div class="modal-body">
+
+            <div id="errorMessageUpdate" class="alert-warning d-none"></div>
+
+          <input type="hidden" name="car_id" id="car_id" >  
+          <div class="mb-3">
+            <label for="car-name" class="form-label">Car Name:</label>
+            <input type="text" name="name" id="name" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="car-model" class="form-label">Car Model:</label>
+            <input type="text" name="model" id="model" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="car-year" class="form-label">Car Year:</label>
+            <input type="text" name="year" id="year" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="motor-type" class="form-label">Motor Type:</label>
+            <input type="text" name="type" id="type" class="form-control" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Update Car</button>
+        </div>
+    </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- View Car Modal-->
+  <div class="modal fade" id="carViewModal" tabindex="-1" aria-labelledby="carViewModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="carViewModal">View Car</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+    
+        <div class="modal-body">
+
+          <div class="mb-3">
+            <label for="car-name" class="form-label">Car Name:</label>
+            <p> id="view_name" class="form-control"</p>
+            
+          </div>
+          <div class="mb-3">
+            <label for="car-model" class="form-label">Car Model:</label>
+            <p> id="view_model" class="form-control"</p>
+            
+          </div>
+          <div class="mb-3">
+            <label for="car-year" class="form-label">Car Year:</label>
+            <p> id="view_year" class="form-control"</p>
+            
+          </div>
+          <div class="mb-3">
+            <label for="motor-type" class="form-label">Motor Type:</label>
+            <p> id="view_type" class="form-control"</p>
+            
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          
+        </div>
+    
+      </div>
+    </div>
+  </div>
+
+
+
   <!-- Include Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <!-- Your custom JavaScript code -->
@@ -112,5 +327,148 @@
   <script src="frontend/js/jquery.validate.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
   <script src="frontend/js/login-service.js"></script>
+</body>
+</html>
+  <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+
+  <script>
+
+    //saveCar
+    $(document).on('submit', '#saveCar', function(e) {
+      e.preventDefault();
+    
+      var formData = new FormData(this);
+      formData.append("save_car", true);
+    
+      $.ajax({
+        type: "POST",
+        url: "/staging/cars",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          var res = jQuery.parseJSON(response);
+          if (res.status == 422) {
+            $('#errorMessage').removeClass('d-none');
+            $('#errorMessage').text(res.message);
+          } else if (res.status == 200) {
+            $('#errorMessage').addClass('d-none');
+            $('#addCarModal').modal('hide');
+            $('#saveCar')[0].reset();
+    
+            alertify.set('notifier', 'position', 'bottom-right');
+            alertify.success(res.message);
+    
+            $('#myTable').load(location.href + " #myTable");
+          }
+        }
+      });
+    });
+    
+    //editCar
+    $(document).on('click', '.editCarBtn', function() {
+      var car_id = $(this).val();
+      //alert(car_id);
+    
+      $.ajax({
+        type: "GET",
+        url: "/staging/cars/?car_id=" + car_id,
+        success: function(response) {
+          var res = jQuery.parseJSON(response);
+          if (res.status == 422) {
+            alert(res.message);
+          } else if (res.status == 200) {
+            $('#car_id').val(res.data.id);
+            $('#name').val(res.data.name);
+            $('#model').val(res.data.model);
+            $('#year').val(res.data.year);
+            $('#type').val(res.data.type);
+    
+            $('#carEditModal').modal('show');
+          }
+        }
+      });
+    });
+    
+    //updateCar    
+    $(document).on('submit', '#updateCar', function(e) {
+      e.preventDefault();
+    
+      var formData = new FormData(this);
+      formData.append("update_car", true);
+    
+      $.ajax({
+        type: "PUT",
+        url: "/staging/cars/" + $('#car_id').val(),
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          var res = jQuery.parseJSON(response);
+          if (res.status == 422) {
+            $('#errorMessageUpdate').removeClass('d-none');
+            $('#errorMessageUpdate').text(res.message);
+          } else if (res.status == 200) {
+            $('#errorMessageUpdate').addClass('d-none');
+            alertify.set('notifier', 'position', 'bottom-right');
+            alertify.success(res.message);
+            $('#carEditModal').modal('hide');
+            $('#updateCar')[0].reset();
+            $('#myTable').load(location.href + " #myTable");
+          }
+        }
+      });
+    });
+    
+    //viewCarBtn
+    $(document).on('click', '.viewCarBtn', function() {
+      var car_id = $(this).val();
+      //alert(car_id);
+    
+      $.ajax({
+        type: "GET",
+        url: "/staging/cars/?car_id=" + car_id,
+        success: function(response) {
+          var res = jQuery.parseJSON(response);
+          if (res.status == 422) {
+            alert(res.message);
+          } else if (res.status == 200) {
+            $('#view_name').text(res.data.name);
+            $('#view_model').text(res.data.model);
+            $('#view_year').text(res.data.year);
+            $('#view_type').text(res.data.type);
+            $('#carViewModal').modal('show');
+          }
+        }
+      });
+    });
+    
+    //deleteCarBtn
+    $(document).on('click', '.deleteCarBtn', function(e) {
+      e.preventDefault();
+    
+      if (confirm('Are you sure you want to delete this data?')) {
+        var car_id = $(this).val();
+        $.ajax({
+          type: "DELETE",
+          url: "/staging/cars/" + car_id,
+          success: function(response) {
+            var res = jQuery.parseJSON(response);
+            if (res.status == 500) {
+              alert(res.message);
+            } else {
+              alertify.set('notifier', 'position', 'bottom-right');
+              alertify.success(res.message);
+              $('#myTable').load(location.href + " #myTable");
+            }
+          }
+        });
+      }
+    });
+    
+    </script>
+    
+
 </body>
 </html>
