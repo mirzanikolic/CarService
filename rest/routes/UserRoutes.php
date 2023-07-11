@@ -23,6 +23,11 @@ Flight::route('POST /staging/users', function () {
     Flight::json(Flight::userService()->add($data));
 });
 
+Flight::route('POST /staging/users/register', function () {
+    $data = Flight::request()->data->getData();
+    Flight::json(Flight::userService()->add($data));
+});
+
 Flight::route('PUT /staging/users/@id', function ($id) {
     $data = Flight::request()->data->getData();
     Flight::userService()->update($id, $data);
