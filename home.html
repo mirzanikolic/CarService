@@ -105,7 +105,7 @@
       
           $.ajax({
             type: 'POST',
-            url: '/staging/cars',
+            url: 'rest/staging/cars/user/{userId} ',
             data: { name: name, model: model, year: year, type: type },
             success: function(response) {
               // Reload table data
